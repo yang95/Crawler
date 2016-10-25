@@ -5,6 +5,7 @@
  * Date: 2016/10/25
  * Time: 14:11
  */
+date_default_timezone_set("Asia/Shanghai");
 require_once "../vendor/autoload.php";
 use Yangakw\Manager\Manager;
 use \Yangakw\Crawler\Crawler;
@@ -16,17 +17,40 @@ use \Yangakw\Page\Page;
  * Page
  * Dom
  */
-Crawler::pushQueue("http://yangakw.cn");
+$redis = new Redis();
+$redis->connect("127.0.0.1");
+$iUrl     = "http://36kr.com/";
 $iErr     = null;
-$suFunc   = function ($url) {
-    $page = Manager::Page();
-    $page->setDir(__DIR__ . "/tmp");
-    $dom = Manager::Dom($page->getData($url));
-    echo $dom->find("title", 0)->plaintext;
-};
-$iCrawler = Manager::Crawler($suFunc, $iErr);
+$DEEP     = 3;
+$suFunc   = function ($url, $tree_deep) use ($iErr, &$suFunc, $redis, $DEEP) {
+    $page = Manager::Page(__DIR__ . "/page" . date("Y-m-d"));
+    $dom  = Manager::Dom($page->getData($url));
+    if (empty($dom)) {
+        return;
+    }
+    $a    = $dom->find("a");
+    $list = [];
+    if ($tree_deep >= $DEEP) {
+        return;
+    }
+    foreach ($a as $val) {
+        $iUrl = Manager::tidyUrl($val->href, $url);
+        Manager::push($redis, $iUrl);
+    }
+    $tree_deep++;
 
-$iCrawler->cache(function ($url) {
-    $page = Manager::Page();
-    $data = $page->getData($url);
-});
+    echo $tree_deep . $url . "________\n";
+    while ($iUrl = Manager::pop($redis)) {
+        $iCrawler = Manager::Crawler($suFunc, $iUrl, $tree_deep, $iErr);
+        $iCrawler->run();
+        unset($iCrawler);
+    }
+    unset($page);
+    unset($dom);
+};
+$iCrawler = Manager::Crawler($suFunc, $iUrl, 1, $iErr);
+$iCrawler->run();
+/*$iCrawler->cache(function ($iUrl) {
+    $page = Manager::Page( __DIR__ . "/page" . date("Y-m-d") );
+    $data = $page->getData($iUrl);
+});*/

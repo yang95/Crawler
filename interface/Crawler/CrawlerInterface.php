@@ -13,28 +13,15 @@ use YangakwInterface\Page\PageInterface;
 interface CrawlerInterface
 {
     /**
-     * 创建队列
-     * @param $cacheDB
+     * @param      $cacheDB
+     * @param      $rUrl
+     * @param      $i
+     * @param null $errCacheDB
      *
      * @return mixed
      */
-    public function initQueue($cacheDB);
+    public function init($cacheDB, $rUrl,$i, $errCacheDB = null);
 
-    /**
-     * 添加任务到队列
-     *
-     * @param $sUrl
-     *
-     * @return mixed
-     */
-    public static function pushQueue($sUrl);
-
-    /**
-     * 取出任务
-     *
-     * @return mixed
-     */
-    public static function popQueue();
 
     /**
      * @return mixed
@@ -43,6 +30,7 @@ interface CrawlerInterface
 
     /**
      * 缓存数据
+     *
      * @param $func
      *
      * @return mixed

@@ -13,10 +13,13 @@ interface ManagerInterface
 {
     /**
      * 添加抓取对象
+     *
      * @param $func
+     * @param $url
+     * @param $i
      * @param $errFunc
      *
      * @return mixed
      */
-    public static function  Crawler($func,$errFunc);
+    public static function Crawler($func, $url, $i,$errFunc);
 }

@@ -8,7 +8,6 @@
  */
 namespace Yangakw\Page;
 
-date_default_timezone_set("Asia/Shanghai");
 use YangakwInterface\Page\PageInterface;
 
 class Page implements PageInterface

@@ -10,75 +10,43 @@ namespace Yangakw\Crawler;
 
 
 use YangakwInterface\Crawler\CrawlerInterface;
-use YangakwInterface\Page\PageInterface;
 
 class Crawler implements CrawlerInterface
 {
-    protected        $cacheDB;
-    protected        $errCacheDB;
-    protected static $Queue = [];
+    protected $cacheDB;
+    protected $errCacheDB;
+    protected $iUrl;
+    protected $Deep;
 
-    public function initQueue($cacheDB, $errCacheDB = null)
+    public function init($cacheDB, $rUrl, $i, $errCacheDB = null)
     {
         // TODO: Implement initQueue() method.
         $this->cacheDB    = $cacheDB;
+        $this->iUrl       = $rUrl;
+        $this->Deep       = $i;
         $this->errCacheDB = $errCacheDB;
     }
 
+
     /**
-     * @param $sUrl
-     *
      * @return mixed
-     */
-    public static function pushQueue($sUrl)
-    {
-        // TODO: Implement pushQueue() method.
-        if ($sUrl) {
-            array_push(self::$Queue, $sUrl);
-        }
-        return $sUrl;
-    }
-
-    /**
-     * @return mixed|null
-     */
-    public static function popQueue()
-    {
-        // TODO: Implement popQueue() method.
-        $sUrl = array_pop(self::$Queue);
-        return empty($sUrl) ? null : $sUrl;
-    }
-
-    /**
-     * @return int
      */
     public function run()
     {
-        $rUrl = $this->popQueue();
-        $i    = 0;
-        while (!(empty($rUrl))) {
-            call_user_func($this->cacheDB, $rUrl);
-            $rUrl = $this->popQueue();
-            $i++;
+        if (empty($this->cacheDB)) {
+            return 0;
         }
-        return $i;
+        return call_user_func($this->cacheDB, $this->iUrl, $this->Deep);
     }
 
     /**
      * @param $func
      *
-     * @return int
+     * @return mixed
      */
     public function cache($func)
     {
-        $rUrl = $this->popQueue();
-        $i    = 0;
-        while (!(empty($rUrl))) {
-            call_user_func($func, $rUrl);
-            $rUrl = $this->popQueue();
-            $i++;
-        }
-        return $i;
+        return call_user_func($func, $this->iUrl);
     }
 
     public function __call($name, $arguments)

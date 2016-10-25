@@ -1,0 +1,22 @@
+{
+    "name": "slime/slime",
+    "authors": [
+        {
+            "name": "yangakw",
+            "email": "yangakw@qq.com",
+            "homepage": "https://github.com/yang95"
+        }
+    ],
+    "require": {
+        "psr/log": "^1.0",
+        "psr/cache": "^1.0",
+        "psr/http-message": "^1.0",
+        "sunra/php-simple-html-dom-parser": "1.5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yangakw\\": "class/",
+            "YangakwInterface\\": "interface/"
+        }
+    }
+}

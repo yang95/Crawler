@@ -53,12 +53,6 @@ class Page implements PageInterface
                 exit("can not mkdir page_dir");
             }
         }
-        $this->setDir($this->getDir() . "/" . date("Y-m-d", time()));
-        if (!is_dir($this->getDir())) {
-            if (!mkdir($this->getDir())) {
-                exit("can not mkdir page_date_dir");
-            }
-        }
         return $this->getDir();
     }
 

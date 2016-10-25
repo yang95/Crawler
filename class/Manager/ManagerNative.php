@@ -14,10 +14,10 @@ use Yangakw\Page\Page;
 use YangakwInterface\Manager\ManagerInterface;
 use Sunra\PhpSimple\HtmlDomParser;
 
-class Manager implements ManagerInterface
+class ManagerNative implements ManagerInterface
 {
-    const KEY_REDIS = "crawler_ols";
-    const EXIST     = 1;
+    public static $ARRAY = [];
+    const EXIST = 1;
     public static $LIST = [];
 
     /**
@@ -49,17 +49,16 @@ class Manager implements ManagerInterface
         return $page;
     }
 
-    public static function pop(\Redis $redis)
+    public static function pop()
     {
-        return $redis->lpop(self::KEY_REDIS);
+        return array_pop(self::$ARRAY);
     }
 
-    public static function push(\Redis $redis, $url)
+    public static function push($url)
     {
         if (!isset(self::$LIST[$url])) {
             self::$LIST[$url] = self::EXIST;
-            echo $url . "\n";
-            $redis->lpush(self::KEY_REDIS, $url);
+            array_push(self::$ARRAY, $url);
         }
     }
 

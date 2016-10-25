@@ -10,16 +10,23 @@ use Yangakw\Manager\Manager;
 use \Yangakw\Crawler\Crawler;
 use \Yangakw\Page\Page;
 
+/*
+ * Manager
+ * Crawler
+ * Page
+ * Dom
+ */
 Crawler::pushQueue("http://yangakw.cn");
 $iErr     = null;
-$page     = Manager::Page();
-$success  = function ($iErr, $url) use ($page) {
-
+$suFunc   = function ($url) {
+    $page = Manager::Page();
     $page->setDir(__DIR__ . "/tmp");
-    $data = $page->getData($url);
-    $dom = Manager::Dom($data);
-    echo $dom->find("title",0)->plaintext;
+    $dom = Manager::Dom($page->getData($url));
+    echo $dom->find("title", 0)->plaintext;
 };
-$iCrawler = Manager::Crawler($success);
+$iCrawler = Manager::Crawler($suFunc, $iErr);
 
-$iCrawler->run();
+$iCrawler->cache(function ($url) {
+    $page = Manager::Page();
+    $data = $page->getData($url);
+});

@@ -14,6 +14,7 @@ interface CrawlerInterface
 {
     /**
      * 创建队列
+     * @param $cacheDB
      *
      * @return mixed
      */
@@ -42,9 +43,9 @@ interface CrawlerInterface
 
     /**
      * 缓存数据
-     * @param PageInterface $page
+     * @param $func
      *
      * @return mixed
      */
-    public function cache(PageInterface $page);
+    public function cache($func);
 }

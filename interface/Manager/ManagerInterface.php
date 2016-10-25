@@ -14,8 +14,9 @@ interface ManagerInterface
     /**
      * 添加抓取对象
      * @param $func
+     * @param $errFunc
      *
      * @return mixed
      */
-    public static function  Crawler($func);
+    public static function  Crawler($func,$errFunc);
 }

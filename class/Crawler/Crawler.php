@@ -14,8 +14,8 @@ use YangakwInterface\Page\PageInterface;
 
 class Crawler implements CrawlerInterface
 {
-    protected $cacheDB;
-    protected $errCacheDB;
+    protected        $cacheDB;
+    protected        $errCacheDB;
     protected static $Queue = [];
 
     public function initQueue($cacheDB, $errCacheDB = null)
@@ -57,20 +57,24 @@ class Crawler implements CrawlerInterface
         $rUrl = $this->popQueue();
         $i    = 0;
         while (!(empty($rUrl))) {
-            call_user_func($this->cacheDB,$this->errCacheDB, $rUrl);
+            call_user_func($this->cacheDB, $rUrl);
             $rUrl = $this->popQueue();
             $i++;
         }
         return $i;
     }
 
-    public function cache(PageInterface $page)
+    /**
+     * @param $func
+     *
+     * @return int
+     */
+    public function cache($func)
     {
-        // TODO: Implement cache() method.
         $rUrl = $this->popQueue();
         $i    = 0;
         while (!(empty($rUrl))) {
-            $page->getData($rUrl);
+            call_user_func($func, $rUrl);
             $rUrl = $this->popQueue();
             $i++;
         }

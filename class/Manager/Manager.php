@@ -18,13 +18,14 @@ class Manager implements ManagerInterface
 {
     /**
      * @param $func
+     * @param $errFunc
      *
      * @return Crawler
      */
-    public static function Crawler($func)
+    public static function Crawler($func, $errFunc)
     {
         $iCrawler = new Crawler();
-        $iCrawler->initQueue($func);
+        $iCrawler->initQueue($func, $errFunc);
         return $iCrawler;
     }
 
@@ -32,7 +33,9 @@ class Manager implements ManagerInterface
     {
         return HtmlDomParser::str_get_html($str);
     }
-    public static function Page(){
+
+    public static function Page()
+    {
         return new Page();
     }
 }
